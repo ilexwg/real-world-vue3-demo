@@ -10,7 +10,7 @@ import EventCard from '@/components/EventCard.vue';
 import EventService from '@/services/EventService.js';
 
 export default {
-  name: 'Home',
+  name: 'EventList',
 
   components: {
     EventCard,
