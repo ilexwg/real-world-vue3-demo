@@ -1,11 +1,17 @@
 <template>
   <div class="home">
-    <h1>This is home page</h1>
+    <EventCard />
   </div>
 </template>
 
 <script>
+import EventCard from '@/components/EventCard.vue';
+
 export default {
   name: 'Home',
+
+  components: {
+    EventCard,
+  },
 };
 </script>
