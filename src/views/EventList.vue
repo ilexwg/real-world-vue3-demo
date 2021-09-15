@@ -26,9 +26,9 @@
 </template>
 
 <script>
+import NProgress from 'nprogress';
 import EventCard from '@/components/EventCard.vue';
 import EventService from '@/services/EventService.js';
-import { watchEffect } from 'vue';
 
 export default {
   name: 'EventList',
@@ -58,18 +58,41 @@ export default {
     },
   },
 
-  created() {
-    watchEffect(() => {
-      this.events = null;
-      EventService.getEvents(2, this.page)
-        .then((response) => {
-          this.events = response.data;
-          this.totalEvents = parseInt(response.headers['x-total-count']);
-        })
-        .catch((error) => {
-          console.log(error, '👀');
+  beforeRouteEnter(routeTo, routeFrom, next) {
+    NProgress.start();
+    const page = parseInt(routeTo.query.page) || 1;
+    EventService.getEvents(2, page)
+      .then((response) => {
+        next((comp) => {
+          comp.events = response.data;
+          comp.totalEvents = parseInt(response.headers['x-total-count']);
         });
-    });
+      })
+      .catch((error) => {
+        console.error(error, '🚥');
+        next({ name: 'NetworkError' });
+      })
+      .finally(() => {
+        NProgress.done();
+      });
+  },
+
+  beforeRouteUpdate(routeTo) {
+    NProgress.start();
+    const page = parseInt(routeTo.query.page) || 1;
+    EventService.getEvents(2, page)
+      .then((response) => {
+        this.events = response.data;
+        this.totalEvents = parseInt(response.headers['x-total-count']);
+        return true;
+      })
+      .catch((error) => {
+        console.error(error, '🚥');
+        return { name: 'NetworkError' };
+      })
+      .finally(() => {
+        NProgress.done();
+      });
   },
 };
 </script>
