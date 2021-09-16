@@ -6,10 +6,11 @@ import EventRegister from '@/views/event/Register.vue';
 import EventEdit from '@/views/event/Edit.vue';
 import NotFound from '@/views/NotFound.vue';
 import NetworkError from '@/views/NetworkError.vue';
-import About from '../views/About.vue';
 import NProgress from 'nprogress';
 import EventService from '@/services/EventService.js';
 import GlobalStore from '@/store';
+
+const About = () => import(/* webpackChunkName: 'about' */ '@/views/About.vue');
 
 const routes = [
   {
