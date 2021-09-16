@@ -26,7 +26,6 @@
 </template>
 
 <script>
-import NProgress from 'nprogress';
 import EventCard from '@/components/EventCard.vue';
 import EventService from '@/services/EventService.js';
 
@@ -59,7 +58,6 @@ export default {
   },
 
   beforeRouteEnter(routeTo, routeFrom, next) {
-    NProgress.start();
     const page = parseInt(routeTo.query.page) || 1;
     EventService.getEvents(2, page)
       .then((response) => {
@@ -71,16 +69,12 @@ export default {
       .catch((error) => {
         console.error(error, '🚥');
         next({ name: 'NetworkError' });
-      })
-      .finally(() => {
-        NProgress.done();
       });
   },
 
   beforeRouteUpdate(routeTo) {
-    NProgress.start();
     const page = parseInt(routeTo.query.page) || 1;
-    EventService.getEvents(2, page)
+    return EventService.getEvents(2, page)
       .then((response) => {
         this.events = response.data;
         this.totalEvents = parseInt(response.headers['x-total-count']);
@@ -89,9 +83,6 @@ export default {
       .catch((error) => {
         console.error(error, '🚥');
         return { name: 'NetworkError' };
-      })
-      .finally(() => {
-        NProgress.done();
       });
   },
 };
